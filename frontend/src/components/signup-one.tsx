@@ -8,7 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
-import { signupWithEmailPassword, signInWithGoogle } from '@/lib/auth'
+import { signupWithEmailPassword, signInWithGoogle, logout } from '@/lib/auth'
 
 export default function SignupPage() {
     const [email, setEmail] = useState('');
@@ -35,6 +35,15 @@ export default function SignupPage() {
 
         try {
             const result = await signupWithEmailPassword(email, password, displayName);
+            
+            // IMPORTANT: S'assurer que l'utilisateur n'est pas connecté après signup
+            // Firebase peut automatiquement connecter l'utilisateur, on le déconnecte
+            try {
+                await logout();
+            } catch (e) {
+                // Ignorer l'erreur si pas connecté
+            }
+            
             // Redirection vers la page de vérification d'email
             router.push(`/verify-email?email=${encodeURIComponent(email)}&verification_sent=${result.verification_email_sent}`);
         } catch (err) {

@@ -3,6 +3,9 @@ import React from 'react'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
+import { useAuth } from '@/hooks/useAuth'
+import { logout } from '@/lib/auth'
+import { useRouter } from 'next/navigation'
 
 interface UserDropdownProps {
   className?: string
@@ -11,6 +14,8 @@ interface UserDropdownProps {
 export const UserDropdown = ({ className }: UserDropdownProps) => {
   const [isOpen, setIsOpen] = React.useState(false)
   const dropdownRef = React.useRef<HTMLDivElement>(null)
+  const { user } = useAuth()
+  const router = useRouter()
 
   // Close dropdown when clicking outside
   React.useEffect(() => {
@@ -25,6 +30,19 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
       document.removeEventListener('mousedown', handleClickOutside)
     }
   }, [])
+
+  const handleLogout = async () => {
+    try {
+      await logout()
+      router.push('/login')
+    } catch (error) {
+      console.error('Error logging out:', error)
+    }
+  }
+
+  if (!user) {
+    return null
+  }
 
   return (
     <div className={cn("relative", className)} ref={dropdownRef}>
@@ -55,8 +73,12 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
                 className="w-10 h-10 rounded-full object-contain bg-gray-100"
               />
               <div>
-                <p className="text-sm font-semibold text-gray-900">Pierre Marie Fevelat</p>
-                <p className="text-xs text-gray-500">pierre-marie.fevelat@hec.edu</p>
+                <p className="text-sm font-semibold text-gray-900">
+                  {user.displayName || 'User'}
+                </p>
+                <p className="text-xs text-gray-500 truncate">
+                  {user.email}
+                </p>
               </div>
             </div>
           </div>
@@ -85,8 +107,7 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
               className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               onClick={() => {
                 setIsOpen(false)
-                // Handle logout logic here
-                console.log('Logging out...')
+                handleLogout()
               }}>
               Log out
             </button>

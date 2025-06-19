@@ -1,14 +1,36 @@
+'use client';
+
+import { useState, useEffect } from 'react';
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { X } from 'lucide-react'
+import { useAuth } from '@/hooks/useAuth'
 
 const competitorTags = ['Stripe', 'Square', 'PayPal']
 const knownAccounts = ['Qonto', 'Doctolib', 'Revolut', 'N26']
 const wantToLearnAccounts = ['Swile', 'Spendesk', 'Klarna', 'Wise']
 
 export const ProfileForm = () => {
+  const { user } = useAuth();
+  const [fullName, setFullName] = useState('');
+  const [email, setEmail] = useState('');
+  const [company, setCompany] = useState('');
+  const [jobTitle, setJobTitle] = useState('');
+  const [industry, setIndustry] = useState('');
+
+  useEffect(() => {
+    if (user) {
+      setFullName(user.displayName || '');
+      setEmail(user.email || '');
+    }
+  }, [user]);
+
+  if (!user) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div className="space-y-4">
       {/* Personal Information */}
@@ -23,7 +45,9 @@ export const ProfileForm = () => {
               <Input
                 id="fullName"
                 type="text"
-                defaultValue="Alex Johnson"
+                value={fullName}
+                onChange={(e) => setFullName(e.target.value)}
+                placeholder="Enter your full name"
                 className="h-8 text-sm"
                 style={{ border: '1px solid #E6E6E6' }}
               />
@@ -36,13 +60,16 @@ export const ProfileForm = () => {
                 <Input
                   id="email"
                   type="email"
-                  defaultValue="alex@startup.com"
-                  className="h-8 text-sm pr-16"
+                  value={email}
+                  disabled
+                  className="h-8 text-sm pr-16 bg-gray-50"
                   style={{ border: '1px solid #E6E6E6' }}
                 />
-                <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">
-                  Verified
-                </span>
+                {user.emailVerified && (
+                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">
+                    Verified
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -61,7 +88,9 @@ export const ProfileForm = () => {
               <Input
                 id="company"
                 type="text"
-                defaultValue="TechCorp Inc."
+                value={company}
+                onChange={(e) => setCompany(e.target.value)}
+                placeholder="Your company name"
                 className="h-8 text-sm"
                 style={{ border: '1px solid #E6E6E6' }}
               />
@@ -73,7 +102,9 @@ export const ProfileForm = () => {
               <Input
                 id="jobTitle"
                 type="text"
-                defaultValue="Account Executive"
+                value={jobTitle}
+                onChange={(e) => setJobTitle(e.target.value)}
+                placeholder="Your job title"
                 className="h-8 text-sm"
                 style={{ border: '1px solid #E6E6E6' }}
               />
@@ -86,7 +117,9 @@ export const ProfileForm = () => {
             <Input
               id="industry"
               type="text"
-              defaultValue="FinTech"
+              value={industry}
+              onChange={(e) => setIndustry(e.target.value)}
+              placeholder="Your industry"
               className="h-8 text-sm"
               style={{ border: '1px solid #E6E6E6' }}
             />

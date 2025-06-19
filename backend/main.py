@@ -377,9 +377,18 @@ async def google_signin(current_user: dict = Depends(get_current_user)):
         )
 
 @app.post("/auth/verify-email-token")
-async def verify_email_token(token: str, email: str):
+async def verify_email_token(request: dict):
     """Vérifier le token personnalisé et marquer l'email comme vérifié"""
     try:
+        token = request.get("token")
+        email = request.get("email")
+        
+        if not token or not email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Token et email requis"
+            )
+        
         # Vérifier le token personnalisé
         decoded_token = auth.verify_id_token(token)
         

@@ -11,14 +11,14 @@ function EmailVerificationContent() {
 
   if (!email) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-4">Email manquant</h1>
-          <p className="text-muted-foreground mb-4">
-            Aucune adresse email fournie pour la vérification.
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="max-w-md w-full text-center space-y-6">
+          <h1 className="text-2xl font-semibold text-gray-900">Missing Email</h1>
+          <p className="text-gray-600">
+            No email address provided for verification.
           </p>
-          <a href="/signup" className="text-blue-600 hover:underline">
-            Retour à l'inscription
+          <a href="/signup" className="text-blue-600 hover:text-blue-800 font-medium underline">
+            Back to sign up
           </a>
         </div>
       </div>
@@ -31,8 +31,8 @@ function EmailVerificationContent() {
 export default function VerifyEmailPage() {
   return (
     <Suspense fallback={
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-gray-900"></div>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
       </div>
     }>
       <EmailVerificationContent />

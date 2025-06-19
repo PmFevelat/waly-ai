@@ -1,3 +1,8 @@
+'use client';
+
+import { useEffect } from 'react';
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
 import { IntrosHeader } from '@/components/intros-header'
 import { IntroCard } from '@/components/intro-card'
 import { IntrosFooter } from '@/components/intros-footer'
@@ -22,6 +27,35 @@ const mockIntros = [
 ]
 
 export default function IntrosPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+
+  useEffect(() => {
+    if (!loading) {
+      if (!user) {
+        // Pas connecté, rediriger vers login
+        router.push('/login');
+      } else if (!user.emailVerified) {
+        // Connecté mais email non vérifié, rediriger vers vérification
+        router.push(`/verify-email?email=${encodeURIComponent(user.email || '')}`);
+      }
+    }
+  }, [user, loading, router]);
+
+  // Afficher un loading pendant la vérification
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
+
+  // Ne pas afficher le contenu si l'utilisateur n'est pas connecté ou email non vérifié
+  if (!user || !user.emailVerified) {
+    return null;
+  }
+
   return (
     <div className="min-h-screen bg-linear-to-b from-muted to-background flex flex-col">
       <IntrosHeader />
