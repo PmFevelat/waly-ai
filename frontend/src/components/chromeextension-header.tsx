@@ -32,13 +32,10 @@ export const ChromeExtensionHeader = () => {
       <nav className="w-full px-6">
         <div className="flex items-center h-10">
           {/* Logo - Extrémité gauche */}
-          <Link
-            href="/"
-            aria-label="home"
-            className="flex items-center space-x-1">
+          <div className="flex items-center space-x-1">
             <Logo className="w-4 h-4" />
             <span className="text-sm font-bold font-[family-name:var(--font-nunito)]">Waly</span>
-          </Link>
+          </div>
 
           {/* Tab Navigation - Aligné avec le contenu */}
           <div className="flex-1 flex justify-center">

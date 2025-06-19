@@ -35,10 +35,9 @@ export default function IntrosPage() {
       if (!user) {
         // Pas connecté, rediriger vers login
         router.push('/login');
-      } else if (!user.emailVerified) {
-        // Connecté mais email non vérifié, rediriger vers vérification
-        router.push(`/verify-email?email=${encodeURIComponent(user.email || '')}`);
       }
+      // Si l'utilisateur est connecté, on l'affiche directement
+      // Pas de vérification d'email nécessaire pour un login normal
     }
   }, [user, loading, router]);
 
@@ -51,8 +50,8 @@ export default function IntrosPage() {
     );
   }
 
-  // Ne pas afficher le contenu si l'utilisateur n'est pas connecté ou email non vérifié
-  if (!user || !user.emailVerified) {
+  // Ne pas afficher le contenu si l'utilisateur n'est pas connecté
+  if (!user) {
     return null;
   }
 

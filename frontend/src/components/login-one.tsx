@@ -54,7 +54,7 @@ export default function LoginPage() {
     };
 
     return (
-        <section className="bg-linear-to-b from-muted to-background flex min-h-screen px-4 py-16 md:py-32">
+        <section className="bg-linear-to-b from-muted to-background flex min-h-screen px-4 py-8">
             <form
                 onSubmit={handleSubmit}
                 className="max-w-92 m-auto h-fit w-full">

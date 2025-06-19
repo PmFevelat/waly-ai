@@ -178,6 +178,11 @@ export async function verifyToken(): Promise<{ valid: boolean; user?: AuthUser }
 // Fonction pour se connecter avec Google
 export async function signInWithGoogle(): Promise<User> {
   try {
+    // Forcer la sélection du compte à chaque fois
+    googleProvider.setCustomParameters({
+      prompt: 'select_account'
+    });
+    
     const result = await signInWithPopup(auth, googleProvider);
     const user = result.user;
     
