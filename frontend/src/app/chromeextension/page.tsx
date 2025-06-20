@@ -15,11 +15,13 @@ export default function ChromeExtensionPage() {
             <div className="col-span-12 lg:col-span-8 lg:col-start-3">
               {/* Header section */}
               <div className="mb-6">
-                <h1 className="text-xl font-semibold text-gray-900">Chrome Extension</h1>
+                <h1 className="text-xl font-semibold text-gray-900 mb-4">Chrome Extension</h1>
+                {/* Espacement supplémentaire pour aligner avec la page intros */}
+                <div className="h-9"></div>
               </div>
 
               {/* Empty state */}
-              <div className="pb-16">
+              <div className="space-y-4 pb-16">
                 <ChromeExtensionEmptyState />
               </div>
             </div>

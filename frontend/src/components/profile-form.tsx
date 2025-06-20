@@ -17,7 +17,6 @@ export const ProfileForm = () => {
   const [industry, setIndustry] = useState('');
   const [competitors, setCompetitors] = useState<string[]>(['Stripe', 'Square', 'PayPal']);
   const [newCompetitor, setNewCompetitor] = useState('');
-  const [showCompetitorInput, setShowCompetitorInput] = useState(false);
   const competitorInputRef = useRef<HTMLInputElement>(null);
   
   const knownAccounts = ['Qonto', 'Doctolib', 'Revolut', 'N26'];
@@ -30,11 +29,7 @@ export const ProfileForm = () => {
     }
   }, [user]);
 
-  useEffect(() => {
-    if (showCompetitorInput && competitorInputRef.current) {
-      competitorInputRef.current.focus();
-    }
-  }, [showCompetitorInput]);
+
 
   // Sauvegarde automatique des champs
   const handleFieldSave = async (field: string, value: string) => {
@@ -66,7 +61,6 @@ export const ProfileForm = () => {
       setCompetitors(updatedCompetitors);
       handleFieldSave('competitors', JSON.stringify(updatedCompetitors));
       setNewCompetitor('');
-      setShowCompetitorInput(false);
     }
   };
 
@@ -182,18 +176,39 @@ export const ProfileForm = () => {
           <h2 className="text-base font-semibold text-gray-900 mb-1">Competitors to Exclude</h2>
           <p className="text-xs text-gray-600 mb-3">Select companies you compete with to avoid introductions</p>
           <div className="flex flex-wrap gap-1.5 mb-3">
-            {competitorTags.map((competitor, index) => (
+            {competitors.map((competitor, index) => (
               <span
                 key={index}
                 className="inline-flex items-center gap-1 px-2 py-0.5 bg-gray-100 text-gray-700 text-xs rounded-full">
                 {competitor}
-                <X className="w-3 h-3 cursor-pointer hover:text-gray-900" />
+                <X 
+                  className="w-3 h-3 cursor-pointer hover:text-gray-900" 
+                  onClick={() => handleRemoveCompetitor(competitor)}
+                />
               </span>
             ))}
+            {/* Chip d'ajout éditable */}
+            <div className="inline-flex items-center px-1.5 py-0.5 bg-gray-50 border border-gray-200 text-gray-500 text-xs rounded-full">
+              <Input
+                ref={competitorInputRef}
+                value={newCompetitor}
+                onChange={(e) => setNewCompetitor(e.target.value)}
+                placeholder="+ Add"
+                className="border-0 bg-transparent text-xs p-0 h-auto w-[40px] focus:ring-0 focus:border-0 placeholder:text-gray-400"
+                style={{ boxShadow: 'none', width: newCompetitor ? `${Math.max(40, newCompetitor.length * 8)}px` : '40px' }}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    handleAddCompetitor();
+                  }
+                }}
+                onBlur={() => {
+                  if (newCompetitor.trim()) {
+                    handleAddCompetitor();
+                  }
+                }}
+              />
+            </div>
           </div>
-          <Button variant="outline" size="sm" className="text-xs h-6">
-            + Add competitor
-          </Button>
         </CardContent>
       </Card>
 
