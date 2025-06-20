@@ -118,6 +118,11 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
 async def root():
     return {"message": "Waly Authentication API is running!"}
 
+@app.get("/health")
+async def health_check():
+    """Endpoint de vérification de santé pour Railway"""
+    return {"status": "healthy", "message": "Waly API is running"}
+
 @app.post("/auth/signup", response_model=SignupResponse)
 async def signup(user_data: UserSignup):
     """Créer un nouvel utilisateur avec Firebase"""
