@@ -10,8 +10,8 @@ import { useAuth } from '@/hooks/useAuth'
 
 export const ProfileForm = () => {
   const { user } = useAuth();
-  const [fullName, setFullName] = useState('');
-  const [email, setEmail] = useState('');
+  // const [fullName, setFullName] = useState('');
+  // const [email, setEmail] = useState('');
   const [company, setCompany] = useState('');
   const [jobTitle, setJobTitle] = useState('');
   const [industry, setIndustry] = useState('');
@@ -22,12 +22,12 @@ export const ProfileForm = () => {
   const knownAccounts = ['Qonto', 'Doctolib', 'Revolut', 'N26'];
   const wantToLearnAccounts = ['Swile', 'Spendesk', 'Klarna', 'Wise'];
 
-  useEffect(() => {
-    if (user) {
-      setFullName(user.displayName || '');
-      setEmail(user.email || '');
-    }
-  }, [user]);
+  // useEffect(() => {
+  //   if (user) {
+  //     setFullName(user.displayName || '');
+  //     setEmail(user.email || '');
+  //   }
+  // }, [user]);
 
 
 

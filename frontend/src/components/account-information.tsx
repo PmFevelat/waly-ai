@@ -30,28 +30,28 @@ export const AccountInformation = () => {
   }, [user]);
 
   // Sauvegarde automatique des champs
-  const handleFieldSave = async (field: string, value: string) => {
-    try {
-      // TODO: Appeler l'API pour sauvegarder les données
-      const idToken = await user?.getIdToken();
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/auth/profile`, {
-        method: 'PATCH',
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${idToken}`,
-        },
-        body: JSON.stringify({
-          [field]: value
-        }),
-      });
-      
-      if (!response.ok) {
-        throw new Error('Failed to save');
-      }
-    } catch (error) {
-      console.error('Error saving field:', error);
-    }
-  };
+  // const handleFieldSave = async (field: string, value: string) => {
+  //   try {
+  //     // TODO: Appeler l'API pour sauvegarder les données
+  //     const idToken = await user?.getIdToken();
+  //     const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/auth/profile`, {
+  //       method: 'PATCH',
+  //       headers: {
+  //         'Content-Type': 'application/json',
+  //         'Authorization': `Bearer ${idToken}`,
+  //       },
+  //       body: JSON.stringify({
+  //         [field]: value
+  //       }),
+  //     });
+  //     
+  //     if (!response.ok) {
+  //       throw new Error('Failed to save');
+  //     }
+  //   } catch (error) {
+  //     console.error('Error saving field:', error);
+  //   }
+  // };
 
   if (!user) {
     return <div>Loading...</div>;
