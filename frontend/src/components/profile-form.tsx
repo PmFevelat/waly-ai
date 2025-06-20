@@ -76,49 +76,6 @@ export const ProfileForm = () => {
 
   return (
     <div className="space-y-4">
-      {/* Personal Information */}
-      <Card className="bg-white hover:shadow-md transition-shadow duration-200 py-2" style={{ border: '1px solid #E6E6E6' }}>
-        <CardContent className="p-3">
-          <h2 className="text-base font-semibold text-gray-900 mb-3">Personal Information</h2>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-            <div className="space-y-1">
-              <Label htmlFor="fullName" className="text-xs font-medium text-gray-700">
-                Full Name
-              </Label>
-              <Input
-                id="fullName"
-                type="text"
-                value={fullName}
-                onChange={(e) => setFullName(e.target.value)}
-                placeholder="Enter your full name"
-                className="h-8 text-sm"
-                style={{ border: '1px solid #E6E6E6' }}
-              />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="email" className="text-xs font-medium text-gray-700">
-                Email
-              </Label>
-              <div className="relative">
-                <Input
-                  id="email"
-                  type="email"
-                  value={email}
-                  disabled
-                  className="h-8 text-sm pr-16 bg-gray-50"
-                  style={{ border: '1px solid #E6E6E6' }}
-                />
-                {user.emailVerified && (
-                  <span className="absolute right-2 top-1/2 transform -translate-y-1/2 text-xs bg-green-100 text-green-700 px-1.5 py-0.5 rounded">
-                    Verified
-                  </span>
-                )}
-              </div>
-            </div>
-          </div>
-        </CardContent>
-      </Card>
-
       {/* Company Information */}
       <Card className="bg-white hover:shadow-md transition-shadow duration-200 py-2" style={{ border: '1px solid #E6E6E6' }}>
         <CardContent className="p-3">

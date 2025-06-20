@@ -86,10 +86,22 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
           {/* Menu items */}
           <div className="py-0.5">
             <Link
-              href="/profile"
+              href="/settings/account"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               onClick={() => setIsOpen(false)}>
-              View profile
+              My Account
+            </Link>
+            <Link
+              href="/settings/billing"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              onClick={() => setIsOpen(false)}>
+              Billing & Plans
+            </Link>
+            <Link
+              href="/settings/credits"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              onClick={() => setIsOpen(false)}>
+              Credits Consumption
             </Link>
           </div>
 

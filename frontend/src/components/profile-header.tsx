@@ -4,11 +4,12 @@ import { Logo } from '@/components/logo'
 import { cn } from '@/lib/utils'
 import React from 'react'
 import { UserDropdown } from './user-dropdown'
+import { CreditCounter } from './credit-counter'
 
 const tabItems = [
   { name: 'Intros', href: '/intros', active: false },
+  { name: 'Interview', href: '/profile', active: true },
   { name: 'Chrome extension', href: '/chromeextension', active: false },
-  { name: 'Profile', href: '/profile', active: true },
 ]
 
 export const ProfileHeader = () => {
@@ -39,7 +40,7 @@ export const ProfileHeader = () => {
 
           {/* Tab Navigation - Aligné avec le contenu */}
           <div className="flex-1 flex justify-center">
-            <div className="w-full max-w-6xl">
+            <div className="w-full max-w-6xl px-14">
               <div className="grid grid-cols-12 gap-6">
                 <div className="col-span-12 lg:col-span-8 lg:col-start-3">
                   <div className="flex items-center space-x-6">
@@ -62,8 +63,9 @@ export const ProfileHeader = () => {
             </div>
           </div>
 
-          {/* Profile Avatar - Extrémité droite */}
-          <div className="flex items-center">
+          {/* Credit Counter et Profile Avatar - Extrémité droite */}
+          <div className="flex items-center gap-3">
+            <CreditCounter />
             <UserDropdown />
           </div>
         </div>

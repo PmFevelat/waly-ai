@@ -15,7 +15,7 @@ export default function ProfilePage() {
             <div className="col-span-12 lg:col-span-8 lg:col-start-3">
               {/* Header section */}
               <div className="mb-6">
-                <h1 className="text-xl font-semibold text-gray-900">My Profile</h1>
+                <h1 className="text-xl font-semibold text-gray-900">My Interview</h1>
               </div>
 
               {/* Profile form */}

@@ -105,10 +105,27 @@ security = HTTPBearer()
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)):
     """Vérifie le token Firebase et retourne l'utilisateur actuel"""
     try:
+        # Vérifier si Firebase est initialisé
+        if not firebase_admin._apps:
+            # Mode développement - retourner un utilisateur de test
+            return {
+                "uid": "dev-user-123",
+                "email": "test@example.com",
+                "email_verified": True
+            }
+        
         # Vérifier le token Firebase
         decoded_token = auth.verify_id_token(credentials.credentials)
         return decoded_token
     except Exception as e:
+        # En mode développement, retourner un utilisateur de test
+        if not firebase_admin._apps:
+            return {
+                "uid": "dev-user-123", 
+                "email": "test@example.com",
+                "email_verified": True
+            }
+        
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid token",

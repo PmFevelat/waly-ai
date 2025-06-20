@@ -13,17 +13,21 @@ import Image from 'next/image'
 const mockIntros = [
   {
     id: 1,
-    title: 'Sales Lead – FinTech – 200-500 emp.',
+    title: 'Sales Lead in FinTech',
     company: 'Qonto',
     description: 'Has strong relationship with the Head of Sales at ACME.',
-    avatar: '/images/avatar1.png'
+    avatar: '/images/avatar1.png',
+    type: 'suggested',
+    credits: 5
   },
   {
     id: 2,
-    title: 'Account Executive – SaaS – 50-200 emp',
+    title: 'Account Executive in SaaS',
     company: 'Swile',
     description: 'Know the decision makers in the Product team at Swile.',
-    avatar: '/images/avatar2.png'
+    avatar: '/images/avatar2.png',
+    type: 'requested',
+    credits: 3
   }
 ]
 
@@ -31,6 +35,7 @@ export default function IntrosPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
+  const [filterType, setFilterType] = useState<'all' | 'suggested' | 'requested'>('all');
   const [displayedIntros, setDisplayedIntros] = useState(mockIntros);
 
   useEffect(() => {
@@ -44,19 +49,26 @@ export default function IntrosPage() {
     }
   }, [user, loading, router]);
 
-  // Recherche en temps réel
+  // Recherche et filtrage en temps réel
   useEffect(() => {
-    if (searchQuery.trim() === '') {
-      setDisplayedIntros(mockIntros);
-    } else {
-      const filtered = mockIntros.filter(intro => 
+    let filtered = mockIntros;
+
+    // Filtrage par type
+    if (filterType !== 'all') {
+      filtered = filtered.filter(intro => intro.type === filterType);
+    }
+
+    // Filtrage par recherche
+    if (searchQuery.trim() !== '') {
+      filtered = filtered.filter(intro => 
         intro.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
         intro.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
         intro.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
-      setDisplayedIntros(filtered);
     }
-  }, [searchQuery]);
+
+    setDisplayedIntros(filtered);
+  }, [searchQuery, filterType]);
 
   // Suppression d'une carte
   const handleRemoveIntro = (id: number) => {
@@ -89,26 +101,58 @@ export default function IntrosPage() {
             <div className="col-span-12 lg:col-span-8 lg:col-start-3">
               {/* Header section */}
               <div className="mb-6">
-                <div className="flex items-center justify-between mb-4">
-                  <h1 className="text-xl font-semibold text-gray-900">Suggested Intros</h1>
-                  {displayedIntros.length > 0 && (
-                    <span className="text-xs text-blue-600 bg-blue-50 px-2 py-1 rounded-full">
-                      {displayedIntros.length} {displayedIntros.length === 1 ? 'match' : 'matches'}
-                    </span>
-                  )}
+                <div className="mb-4">
+                  <h1 className="text-xl font-semibold text-gray-900">Intros</h1>
                 </div>
                 
-                {/* Search bar */}
-                <div className="relative">
-                  <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
-                  <Input
-                    type="text"
-                    placeholder="Search intros"
-                    value={searchQuery}
-                    onChange={(e) => setSearchQuery(e.target.value)}
-                    className="pl-9 h-9 text-sm bg-white focus:border-blue-500 focus:ring-blue-500"
-                    style={{ border: '1px solid #E6E6E6' }}
-                  />
+                {/* Search bar and filter selector on same line */}
+                <div className="flex items-center justify-between">
+                  {/* Search bar */}
+                  <div className="relative max-w-sm">
+                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 w-4 h-4" />
+                    <Input
+                      type="text"
+                      placeholder="Search intros"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                      className="pl-9 h-8 text-sm bg-white focus:border-blue-500 focus:ring-blue-500"
+                      style={{ border: '1px solid #E6E6E6' }}
+                    />
+                  </div>
+                  
+                  {/* Filter selector */}
+                  <div className="flex items-center bg-gray-100 rounded-lg p-1">
+                    <button
+                      onClick={() => setFilterType('suggested')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                        filterType === 'suggested' 
+                          ? 'bg-white text-gray-900 shadow-sm' 
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Suggested
+                    </button>
+                    <button
+                      onClick={() => setFilterType('requested')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                        filterType === 'requested' 
+                          ? 'bg-white text-gray-900 shadow-sm' 
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Requested
+                    </button>
+                    <button
+                      onClick={() => setFilterType('all')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                        filterType === 'all' 
+                          ? 'bg-white text-gray-900 shadow-sm' 
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      All
+                    </button>
+                  </div>
                 </div>
               </div>
 

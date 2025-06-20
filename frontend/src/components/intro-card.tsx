@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { User } from 'lucide-react'
+import { User, Crown } from 'lucide-react'
 import Image from 'next/image'
 
 interface Intro {
@@ -9,6 +9,8 @@ interface Intro {
   company: string
   description: string
   avatar?: string
+  type?: 'suggested' | 'requested'
+  credits?: number
 }
 
 interface IntroCardProps {
@@ -18,11 +20,20 @@ interface IntroCardProps {
 
 export const IntroCard = ({ intro, onRemove }: IntroCardProps) => {
   return (
-    <Card className="bg-white hover:shadow-md transition-shadow duration-200 py-2" style={{ border: '1px solid #E6E6E6' }}>
+    <Card className="bg-white hover:shadow-md transition-shadow duration-200 py-2 relative" style={{ border: '1px solid #E6E6E6' }}>
+      {/* Chip requested */}
+      {intro.type === 'requested' && (
+        <div className="absolute top-2 right-2 z-10">
+          <span className="inline-flex items-center px-2 py-1 rounded-full text-xs font-medium bg-blue-100 text-blue-700">
+            Requested
+          </span>
+        </div>
+      )}
+      
       <CardContent className="p-3">
         <div className="flex flex-col space-y-2">
           {/* Header content */}
-          <div className="flex items-start space-x-2">
+          <div className={`flex items-start space-x-2 ${intro.type === 'requested' ? 'pr-20' : ''}`}>
             {/* Avatar */}
             <div className="flex-shrink-0">
               {intro.avatar ? (
@@ -68,8 +79,14 @@ export const IntroCard = ({ intro, onRemove }: IntroCardProps) => {
             </Button>
             <Button
               size="sm"
-              className="px-3 py-1 text-xs bg-black text-white hover:bg-gray-800 h-6">
-              Accept
+              className="px-3 py-1 text-xs bg-black text-white hover:bg-gray-800 h-6 flex items-center gap-1">
+              {intro.credits && (
+                <>
+                  <span>{intro.credits}</span>
+                  <Crown className="w-3 h-3" />
+                </>
+              )}
+              {intro.type === 'suggested' ? 'Request' : 'Accept'}
             </Button>
           </div>
         </div>
