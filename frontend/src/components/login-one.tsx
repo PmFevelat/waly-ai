@@ -1,7 +1,7 @@
 'use client';
 
-import { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import { useState, useEffect, Suspense } from 'react';
+import { useRouter, useSearchParams } from 'next/navigation';
 import { Logo } from '@/components/logo'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -10,12 +10,21 @@ import Link from 'next/link'
 import { ArrowLeft } from 'lucide-react'
 import { loginWithEmailPassword, signInWithGoogle } from '@/lib/auth'
 
-export default function LoginPage() {
+function LoginContent() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [loading, setLoading] = useState(false);
     const [error, setError] = useState('');
+    const [successMessage, setSuccessMessage] = useState('');
     const router = useRouter();
+    const searchParams = useSearchParams();
+
+    useEffect(() => {
+        const message = searchParams.get('message');
+        if (message) {
+            setSuccessMessage(message);
+        }
+    }, [searchParams]);
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -90,6 +99,12 @@ export default function LoginPage() {
                     {error && (
                         <div className="mt-4 p-2 bg-red-50 border border-red-200 text-red-600 rounded text-sm">
                             {error}
+                        </div>
+                    )}
+
+                    {successMessage && (
+                        <div className="mt-4 p-2 bg-green-50 border border-green-200 text-green-600 rounded text-sm">
+                            {successMessage}
                         </div>
                     )}
 
@@ -187,4 +202,22 @@ export default function LoginPage() {
             </form>
         </section>
     )
+}
+
+function LoadingFallback() {
+    return (
+        <section className="bg-linear-to-b from-muted to-background flex min-h-screen px-4 py-8">
+            <div className="max-w-92 m-auto h-fit w-full p-6">
+                <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900 mx-auto"></div>
+            </div>
+        </section>
+    );
+}
+
+export default function LoginPage() {
+    return (
+        <Suspense fallback={<LoadingFallback />}>
+            <LoginContent />
+        </Suspense>
+    );
 }

@@ -44,8 +44,8 @@ export default function SignupPage() {
                 // Ignorer l'erreur si pas connecté
             }
             
-            // Redirection vers la page de vérification d'email
-            router.push(`/verify-email?email=${encodeURIComponent(email)}&verification_sent=${result.verification_email_sent}`);
+            // Redirection vers la page de login avec message de succès
+            router.push(`/login?message=Account created successfully! You can now sign in.`);
         } catch (err) {
             setError(err instanceof Error ? err.message : 'Error creating account');
         } finally {
