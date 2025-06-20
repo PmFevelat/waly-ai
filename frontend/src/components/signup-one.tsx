@@ -34,7 +34,7 @@ export default function SignupPage() {
         setError('');
 
         try {
-            const result = await signupWithEmailPassword(email, password, displayName);
+            await signupWithEmailPassword(email, password, displayName);
             
             // IMPORTANT: S'assurer que l'utilisateur n'est pas connecté après signup
             // Firebase peut automatiquement connecter l'utilisateur, on le déconnecte
