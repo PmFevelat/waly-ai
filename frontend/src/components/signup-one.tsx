@@ -62,6 +62,11 @@ export default function SignupPage() {
             // Redirection directe vers /intros pour Google (pas besoin de vérification d'email)
             router.push('/intros');
         } catch (err) {
+            // Ne pas afficher d'erreur si l'utilisateur ferme la popup (comportement normal)
+            if (err instanceof Error && err.message.includes('auth/popup-closed-by-user')) {
+                // L'utilisateur a fermé la popup, ne pas afficher d'erreur
+                return;
+            }
             setError(err instanceof Error ? err.message : 'Error during Google login');
         } finally {
             setLoading(false);
