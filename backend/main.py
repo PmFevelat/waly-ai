@@ -128,12 +128,12 @@ async def health_check():
 async def signup(user_data: UserSignup):
     """Créer un nouvel utilisateur avec Firebase"""
     try:
-        # Créer l'utilisateur avec Firebase Admin SDK
+        # Créer l'utilisateur avec Firebase Admin SDK avec email automatiquement vérifié
         user = auth.create_user(
             email=user_data.email,
             password=user_data.password,
             display_name=user_data.display_name,
-            email_verified=False
+            email_verified=True  # Email automatiquement vérifié
         )
         
         # Ajouter des claims personnalisés pour le rôle
@@ -143,51 +143,18 @@ async def signup(user_data: UserSignup):
             "is_active": True
         })
         
-        # Envoyer l'email de vérification
-        try:
-            # Générer un token personnalisé pour la vérification
-            verification_token = auth.create_custom_token(user.uid, {"email_verification": True})
-            
-            # Créer un lien personnalisé vers notre frontend
-            frontend_url = os.getenv("FRONTEND_URL", "http://localhost:3000")
-            verification_link = f"{frontend_url}/verify-email-action?token={verification_token.decode('utf-8')}&email={user_data.email}"
-            
-            await send_verification_email(user_data.email, verification_link)
-            verification_sent = True
-        except Exception as e:
-            print(f"Erreur lors de l'envoi de l'email de vérification: {e}")
-            verification_sent = False
-        
         return SignupResponse(
-            message="User created successfully. Please check your email.",
+            message="Account created successfully. You can now sign in.",
             uid=user.uid,
-            verification_email_sent=verification_sent
+            verification_email_sent=False  # Pas d'email envoyé
         )
         
     except auth.EmailAlreadyExistsError:
-        # Vérifier si l'utilisateur existe réellement
-        try:
-            existing_user = auth.get_user_by_email(user_data.email)
-            if existing_user.email_verified:
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="This email address is already in use with a verified account"
-                )
-            else:
-                # L'utilisateur existe mais n'a pas vérifié son email
-                # On peut renvoyer l'email de vérification
-                link = auth.generate_email_verification_link(user_data.email)
-                await send_verification_email(user_data.email, link)
-                raise HTTPException(
-                    status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="This email address is already associated with an unverified account. A new verification email has been sent."
-                )
-        except auth.UserNotFoundError:
-            # L'utilisateur n'existe pas, erreur étrange
-            raise HTTPException(
-                status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Synchronization error. Please try again in a few minutes."
-            )
+        # Email déjà utilisé
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="This email address is already in use. Please sign in instead."
+        )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
