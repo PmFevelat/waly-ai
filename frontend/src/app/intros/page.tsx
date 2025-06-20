@@ -17,7 +17,7 @@ const mockIntros = [
     company: 'Qonto',
     description: 'Has strong relationship with the Head of Sales at ACME.',
     avatar: '/images/avatar1.png',
-    type: 'suggested',
+    type: 'suggested' as const,
     credits: 5
   },
   {
@@ -26,7 +26,7 @@ const mockIntros = [
     company: 'Swile',
     description: 'Know the decision makers in the Product team at Swile.',
     avatar: '/images/avatar2.png',
-    type: 'requested',
+    type: 'requested' as const,
     credits: 3
   }
 ]
