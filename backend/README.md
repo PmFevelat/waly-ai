@@ -191,4 +191,4 @@ Pour contribuer au projet :
 
 ## 📄 License
 
-Ce projet est sous licence MIT. 
+Ce projet est sous licence MIT. # Force redeploy Fri Jun 20 10:51:24 CEST 2025
