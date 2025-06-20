@@ -40,7 +40,7 @@ export default function SignupPage() {
             // Firebase peut automatiquement connecter l'utilisateur, on le déconnecte
             try {
                 await logout();
-            } catch (e) {
+            } catch {
                 // Ignorer l'erreur si pas connecté
             }
             

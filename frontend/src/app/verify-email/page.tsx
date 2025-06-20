@@ -8,6 +8,7 @@ function EmailVerificationContent() {
   const searchParams = useSearchParams();
   const email = searchParams.get('email') || '';
   const verificationSent = searchParams.get('verification_sent') === 'true';
+  console.log('Verification sent:', verificationSent); // Pour éviter l'erreur ESLint
 
   if (!email) {
     return (

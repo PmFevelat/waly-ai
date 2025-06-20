@@ -47,7 +47,7 @@ export default function EmailVerification({ email }: EmailVerificationProps) {
           {/* Description */}
           <div className="mb-4">
             <p className="text-muted-foreground text-sm mb-1">
-              We've sent a verification link to
+              We&apos;ve sent a verification link to
             </p>
             <p className="font-semibold text-base">
               {email}
@@ -57,7 +57,7 @@ export default function EmailVerification({ email }: EmailVerificationProps) {
           {/* Info message */}
           <div className="text-sm text-muted-foreground mb-6">
             <p>Click the link in your email to verify your account.</p>
-            <p>After verification, you'll need to sign in to access your account.</p>
+            <p>After verification, you&apos;ll need to sign in to access your account.</p>
           </div>
 
           {/* Error message */}
@@ -77,7 +77,7 @@ export default function EmailVerification({ email }: EmailVerificationProps) {
 
           {/* Resend link */}
           <p className="text-muted-foreground text-sm mb-6">
-            Didn't receive the email?{' '}
+            Didn&apos;t receive the email?{' '}
             <button
               onClick={handleResendEmail}
               disabled={resending}

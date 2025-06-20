@@ -8,7 +8,7 @@ import { CheckCircle, XCircle } from 'lucide-react';
 
 export default function VerifyEmailActionPage() {
   const searchParams = useSearchParams();
-  const router = useRouter();
+  // const router = useRouter(); // Commenté pour éviter l'erreur ESLint
   const [verifying, setVerifying] = useState(true);
   const [verified, setVerified] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,7 +40,7 @@ export default function VerifyEmailActionPage() {
           const error = await response.json();
           setError(error.detail || 'Verification failed');
         }
-      } catch (err) {
+              } catch {
         setError('Error verifying email');
       } finally {
         setVerifying(false);
