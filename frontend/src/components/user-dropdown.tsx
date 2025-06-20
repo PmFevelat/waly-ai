@@ -34,7 +34,7 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
   const handleLogout = async () => {
     try {
       await logout()
-      router.push('/login')
+      router.push('/')
     } catch (error) {
       console.error('Error logging out:', error)
     }
@@ -91,11 +91,6 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
               onClick={() => setIsOpen(false)}>
               View profile
             </Link>
-            <button
-              className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-              onClick={() => setIsOpen(false)}>
-              Configuration
-            </button>
           </div>
 
           {/* Separator */}

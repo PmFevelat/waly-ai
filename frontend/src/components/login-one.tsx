@@ -20,7 +20,7 @@ export default function LoginPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !password) {
-            setError('Veuillez remplir tous les champs');
+            setError('Please fill in all fields');
             return;
         }
 
@@ -32,7 +32,7 @@ export default function LoginPage() {
             // Redirection vers /intros après connexion réussie
             router.push('/intros');
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Erreur lors de la connexion');
+            setError(err instanceof Error ? err.message : 'Error during login');
         } finally {
             setLoading(false);
         }
@@ -47,7 +47,7 @@ export default function LoginPage() {
             // Redirection vers /intros après connexion réussie
             router.push('/intros');
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Erreur lors de la connexion Google');
+            setError(err instanceof Error ? err.message : 'Error during Google login');
         } finally {
             setLoading(false);
         }
@@ -83,7 +83,7 @@ export default function LoginPage() {
                     </div>
 
                     {error && (
-                        <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                        <div className="mt-4 p-2 bg-red-50 border border-red-200 text-red-600 rounded text-sm">
                             {error}
                         </div>
                     )}
@@ -163,7 +163,7 @@ export default function LoginPage() {
                             className="w-full"
                             size="default"
                             disabled={loading}>
-                            {loading ? 'Connexion...' : 'Sign In'}
+                            {loading ? 'Signing in...' : 'Sign In'}
                         </Button>
                     </div>
                 </div>

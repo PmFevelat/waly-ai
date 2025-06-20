@@ -19,12 +19,8 @@ export const ChromeExtensionEmptyState = () => {
         <h2 className="text-xl font-semibold text-gray-900 mb-3">
           Chrome Extension Coming Soon
         </h2>
-        <p className="text-sm text-gray-600 leading-relaxed mb-4">
-          We&apos;re working hard to bring you the best Chrome extension experience. 
+        <p className="text-sm text-gray-600 leading-relaxed">
           Our extension is currently in development and will be available soon.
-        </p>
-        <p className="text-xs text-gray-500">
-          Stay tuned for updates and be the first to know when it&apos;s ready!
         </p>
       </div>
     </div>

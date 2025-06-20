@@ -43,14 +43,22 @@ FIREBASE_CLIENT_ID=votre-client-id
 
 Pour envoyer les emails de vérification, configurez les variables SMTP :
 
-```env
-SMTP_SERVER=smtp.gmail.com
-SMTP_PORT=587
-SMTP_USERNAME=votre-email@gmail.com
-SMTP_PASSWORD=votre-mot-de-passe-app
-```
+#### Gmail Configuration
+1. Activez la vérification en 2 étapes sur votre compte Gmail
+2. Générez un mot de passe d'application : https://myaccount.google.com/apppasswords
+3. Configurez dans `.env` :
+   ```
+   SMTP_SERVER=smtp.gmail.com
+   SMTP_PORT=587
+   SMTP_USERNAME=your-email@gmail.com
+   SMTP_PASSWORD=your-app-password
+   ```
 
-**Note**: Pour Gmail, utilisez un mot de passe d'application, pas votre mot de passe principal.
+#### Anti-Spam Best Practices
+L'API inclut automatiquement :
+- Headers anti-spam (Message-ID, Date, Precedence)
+- Lien de désinscription
+- Format de message professionnel
 
 ### 5. Démarrage du serveur
 

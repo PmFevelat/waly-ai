@@ -110,7 +110,7 @@ async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(s
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Token invalide",
+            detail="Invalid token",
             headers={"WWW-Authenticate": "Bearer"},
         )
 
@@ -153,7 +153,7 @@ async def signup(user_data: UserSignup):
             verification_sent = False
         
         return SignupResponse(
-            message="Utilisateur créé avec succès. Veuillez vérifier votre email.",
+            message="User created successfully. Please check your email.",
             uid=user.uid,
             verification_email_sent=verification_sent
         )
@@ -165,7 +165,7 @@ async def signup(user_data: UserSignup):
             if existing_user.email_verified:
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Cette adresse email est déjà utilisée avec un compte vérifié"
+                    detail="This email address is already in use with a verified account"
                 )
             else:
                 # L'utilisateur existe mais n'a pas vérifié son email
@@ -174,18 +174,18 @@ async def signup(user_data: UserSignup):
                 await send_verification_email(user_data.email, link)
                 raise HTTPException(
                     status_code=status.HTTP_400_BAD_REQUEST,
-                    detail="Cette adresse email est déjà associée à un compte non vérifié. Un nouvel email de vérification a été envoyé."
+                    detail="This email address is already associated with an unverified account. A new verification email has been sent."
                 )
         except auth.UserNotFoundError:
             # L'utilisateur n'existe pas, erreur étrange
             raise HTTPException(
                 status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-                detail="Erreur de synchronisation. Veuillez réessayer dans quelques minutes."
+                detail="Synchronization error. Please try again in a few minutes."
             )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erreur lors de la création du compte: {str(e)}"
+            detail=f"Error creating account: {str(e)}"
         )
 
 @app.post("/auth/login", response_model=LoginResponse)
@@ -200,7 +200,7 @@ async def login(user_data: UserLogin):
         if not custom_claims.get("is_active", True):
             raise HTTPException(
                 status_code=status.HTTP_403_FORBIDDEN,
-                detail="Compte désactivé. Contactez l'administrateur."
+                detail="Account disabled. Contact administrator."
             )
         
         # Mettre à jour la dernière connexion
@@ -225,7 +225,7 @@ async def login(user_data: UserLogin):
         )
         
         return LoginResponse(
-            message="Connexion réussie",
+            message="Login successful",
             custom_token=custom_token.decode('utf-8'),
             user=user_response
         )
@@ -233,12 +233,12 @@ async def login(user_data: UserLogin):
     except auth.UserNotFoundError:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Utilisateur non trouvé"
+            detail="User not found"
         )
     except Exception as e:
         raise HTTPException(
             status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
-            detail=f"Erreur lors de la connexion: {str(e)}"
+            detail=f"Error during login: {str(e)}"
         )
 
 @app.post("/auth/resend-verification", response_model=AuthResponse)
@@ -250,7 +250,7 @@ async def resend_verification_email(request: EmailVerificationRequest):
         if user.email_verified:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="L'email est déjà vérifié"
+                detail="Email is already verified"
             )
         
         # Générer et envoyer le lien de vérification personnalisé
@@ -260,7 +260,7 @@ async def resend_verification_email(request: EmailVerificationRequest):
         
         await send_verification_email(request.email, verification_link)
         
-        return AuthResponse(message="Email de vérification renvoyé")
+        return AuthResponse(message="Verification email sent")
         
     except auth.UserNotFoundError:
         raise HTTPException(
@@ -386,7 +386,7 @@ async def verify_email_token(request: dict):
         if not token or not email:
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Token et email requis"
+                detail="Token and email required"
             )
         
         # Vérifier le token personnalisé
@@ -396,7 +396,7 @@ async def verify_email_token(request: dict):
         if not decoded_token.get("email_verification"):
             raise HTTPException(
                 status_code=status.HTTP_400_BAD_REQUEST,
-                detail="Token invalide pour la vérification d'email"
+                detail="Invalid email verification token"
             )
         
         # Vérifier que l'email correspond
@@ -433,6 +433,38 @@ async def debug_delete_user(email: str):
             detail=f"Erreur lors de la suppression: {str(e)}"
         )
 
+@app.patch("/auth/profile")
+async def update_user_profile(updates: dict, current_user: dict = Depends(get_current_user)):
+    """Mettre à jour le profil utilisateur"""
+    try:
+        user_uid = current_user['uid']
+        user = auth.get_user(user_uid)
+        
+        # Récupérer les claims actuels
+        custom_claims = user.custom_claims or {}
+        
+        # Mettre à jour les claims avec les nouvelles données
+        allowed_fields = ['display_name', 'company', 'job_title', 'industry', 'competitors']
+        for field in allowed_fields:
+            if field in updates:
+                if field == 'display_name':
+                    # Mettre à jour le display name dans Firebase Auth
+                    auth.update_user(user_uid, display_name=updates[field])
+                else:
+                    # Mettre à jour dans les custom claims
+                    custom_claims[field] = updates[field]
+        
+        # Sauvegarder les claims mis à jour
+        auth.set_custom_user_claims(user_uid, custom_claims)
+        
+        return {"message": "Profile updated successfully"}
+        
+    except Exception as e:
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"Error updating profile: {str(e)}"
+        )
+
 async def send_verification_email(email: str, verification_link: str):
     """Envoyer l'email de vérification"""
     try:
@@ -443,9 +475,9 @@ async def send_verification_email(email: str, verification_link: str):
         
         # Si SMTP n'est pas configuré, afficher le lien dans les logs
         if not all([smtp_server, smtp_username, smtp_password]):
-            print(f"\n🔗 LIEN DE VÉRIFICATION pour {email}:")
+            print(f"\n🔗 VERIFICATION LINK for {email}:")
             print(f"   {verification_link}")
-            print(f"💡 Pour envoyer automatiquement les emails, configurez SMTP dans .env\n")
+            print(f"💡 To send emails automatically, configure SMTP in .env\n")
             return
         
         # Envoyer l'email via SMTP
@@ -456,23 +488,30 @@ async def send_verification_email(email: str, verification_link: str):
         msg = MIMEMultipart()
         msg['From'] = smtp_username
         msg['To'] = email
-        msg['Subject'] = "Vérifiez votre adresse email - Waly"
+        msg['Subject'] = "Verify your email - Waly"
+        msg['Reply-To'] = smtp_username
+        msg['Message-ID'] = f"<{datetime.now().timestamp()}@waly.com>"
+        msg['Date'] = datetime.now().strftime("%a, %d %b %Y %H:%M:%S +0000")
+        
+        # Headers anti-spam
+        msg['List-Unsubscribe'] = f"<mailto:{smtp_username}?subject=unsubscribe>"
+        msg['Precedence'] = 'bulk'
         
         body = f"""
-Bonjour,
+Hello,
 
-Merci de vous être inscrit sur Waly !
+Thank you for signing up for Waly!
 
-Pour terminer la création de votre compte, veuillez cliquer sur le lien ci-dessous pour vérifier votre adresse email :
+To complete your account creation, please click the link below to verify your email address:
 
 {verification_link}
 
-Ce lien expire dans 1 heure.
+This link expires in 1 hour.
 
-Si vous n'avez pas créé de compte sur Waly, vous pouvez ignorer cet email.
+If you did not create an account on Waly, you can ignore this email.
 
-Cordialement,
-L'équipe Waly
+Best regards,
+The Waly Team
         """
         
         msg.attach(MIMEText(body, 'plain'))
@@ -484,11 +523,11 @@ L'équipe Waly
         server.sendmail(smtp_username, email, text)
         server.quit()
         
-        print(f"✅ Email de vérification envoyé à {email}")
+        print(f"✅ Verification email sent to {email}")
         
     except Exception as e:
-        print(f"❌ Erreur lors de l'envoi de l'email à {email}: {e}")
-        print(f"🔗 Lien de vérification: {verification_link}")
+        print(f"❌ Error sending email to {email}: {e}")
+        print(f"🔗 Verification link: {verification_link}")
 
 if __name__ == "__main__":
     import uvicorn

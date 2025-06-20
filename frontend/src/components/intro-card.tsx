@@ -13,9 +13,10 @@ interface Intro {
 
 interface IntroCardProps {
   intro: Intro
+  onRemove?: () => void
 }
 
-export const IntroCard = ({ intro }: IntroCardProps) => {
+export const IntroCard = ({ intro, onRemove }: IntroCardProps) => {
   return (
     <Card className="bg-white hover:shadow-md transition-shadow duration-200 py-2" style={{ border: '1px solid #E6E6E6' }}>
       <CardContent className="p-3">
@@ -61,7 +62,8 @@ export const IntroCard = ({ intro }: IntroCardProps) => {
             <Button
               variant="outline"
               size="sm"
-              className="px-2 py-1 text-xs text-gray-600 border-gray-300 hover:bg-gray-50 h-6">
+              className="px-2 py-1 text-xs text-gray-600 border-gray-300 hover:bg-gray-50 h-6"
+              onClick={onRemove}>
               Not now
             </Button>
             <Button

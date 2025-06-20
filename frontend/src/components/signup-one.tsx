@@ -21,12 +21,12 @@ export default function SignupPage() {
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         if (!email || !password) {
-            setError('Veuillez remplir tous les champs obligatoires');
+            setError('Please fill in all required fields');
             return;
         }
 
         if (password.length < 6) {
-            setError('Le mot de passe doit contenir au moins 6 caractères');
+            setError('Password must be at least 6 characters');
             return;
         }
 
@@ -47,7 +47,7 @@ export default function SignupPage() {
             // Redirection vers la page de vérification d'email
             router.push(`/verify-email?email=${encodeURIComponent(email)}&verification_sent=${result.verification_email_sent}`);
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Erreur lors de la création du compte');
+            setError(err instanceof Error ? err.message : 'Error creating account');
         } finally {
             setLoading(false);
         }
@@ -62,7 +62,7 @@ export default function SignupPage() {
             // Redirection directe vers /intros pour Google (pas besoin de vérification d'email)
             router.push('/intros');
         } catch (err) {
-            setError(err instanceof Error ? err.message : 'Erreur lors de la connexion Google');
+            setError(err instanceof Error ? err.message : 'Error during Google login');
         } finally {
             setLoading(false);
         }
@@ -98,7 +98,7 @@ export default function SignupPage() {
                     </div>
 
                     {error && (
-                        <div className="mt-4 p-3 bg-red-100 border border-red-400 text-red-700 rounded">
+                        <div className="mt-4 p-2 bg-red-50 border border-red-200 text-red-600 rounded text-sm">
                             {error}
                         </div>
                     )}

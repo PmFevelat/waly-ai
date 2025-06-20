@@ -1,16 +1,12 @@
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { X } from 'lucide-react'
 import { useAuth } from '@/hooks/useAuth'
-
-const competitorTags = ['Stripe', 'Square', 'PayPal']
-const knownAccounts = ['Qonto', 'Doctolib', 'Revolut', 'N26']
-const wantToLearnAccounts = ['Swile', 'Spendesk', 'Klarna', 'Wise']
 
 export const ProfileForm = () => {
   const { user } = useAuth();
@@ -19,6 +15,13 @@ export const ProfileForm = () => {
   const [company, setCompany] = useState('');
   const [jobTitle, setJobTitle] = useState('');
   const [industry, setIndustry] = useState('');
+  const [competitors, setCompetitors] = useState<string[]>(['Stripe', 'Square', 'PayPal']);
+  const [newCompetitor, setNewCompetitor] = useState('');
+  const [showCompetitorInput, setShowCompetitorInput] = useState(false);
+  const competitorInputRef = useRef<HTMLInputElement>(null);
+  
+  const knownAccounts = ['Qonto', 'Doctolib', 'Revolut', 'N26'];
+  const wantToLearnAccounts = ['Swile', 'Spendesk', 'Klarna', 'Wise'];
 
   useEffect(() => {
     if (user) {
@@ -26,6 +29,52 @@ export const ProfileForm = () => {
       setEmail(user.email || '');
     }
   }, [user]);
+
+  useEffect(() => {
+    if (showCompetitorInput && competitorInputRef.current) {
+      competitorInputRef.current.focus();
+    }
+  }, [showCompetitorInput]);
+
+  // Sauvegarde automatique des champs
+  const handleFieldSave = async (field: string, value: string) => {
+    try {
+      // TODO: Appeler l'API pour sauvegarder les données
+      const idToken = await user?.getIdToken();
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/auth/profile`, {
+        method: 'PATCH',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
+        },
+        body: JSON.stringify({
+          [field]: value
+        }),
+      });
+      
+      if (!response.ok) {
+        throw new Error('Failed to save');
+      }
+    } catch (error) {
+      console.error('Error saving field:', error);
+    }
+  };
+
+  const handleAddCompetitor = () => {
+    if (newCompetitor.trim() && !competitors.includes(newCompetitor.trim())) {
+      const updatedCompetitors = [...competitors, newCompetitor.trim()];
+      setCompetitors(updatedCompetitors);
+      handleFieldSave('competitors', JSON.stringify(updatedCompetitors));
+      setNewCompetitor('');
+      setShowCompetitorInput(false);
+    }
+  };
+
+  const handleRemoveCompetitor = (competitor: string) => {
+    const updatedCompetitors = competitors.filter(c => c !== competitor);
+    setCompetitors(updatedCompetitors);
+    handleFieldSave('competitors', JSON.stringify(updatedCompetitors));
+  };
 
   if (!user) {
     return <div>Loading...</div>;

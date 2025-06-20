@@ -62,15 +62,15 @@ export default function EmailVerification({ email }: EmailVerificationProps) {
 
           {/* Error message */}
           {error && (
-            <div className="p-3 bg-red-100 border border-red-400 text-red-700 rounded mb-4">
+            <div className="p-2 bg-red-50 border border-red-200 text-red-600 rounded text-sm mb-4">
               {error}
             </div>
           )}
 
           {/* Success message */}
           {resent && (
-            <div className="p-3 bg-green-100 border border-green-400 text-green-700 rounded flex items-center justify-center mb-4">
-              <CheckCircle className="w-4 h-4 mr-2" />
+            <div className="p-2 bg-green-50 border border-green-200 text-green-600 rounded flex items-center justify-center text-sm mb-4">
+              <CheckCircle className="w-3 h-3 mr-2" />
               <span>Email sent successfully!</span>
             </div>
           )}
