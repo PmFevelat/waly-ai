@@ -9,7 +9,6 @@ import { CreditCounter } from './credit-counter'
 const tabItems = [
   { name: 'Intros', href: '/intros', active: false },
   { name: 'Interview', href: '/profile', active: true },
-  { name: 'Chrome extension', href: '/chromeextension', active: false },
 ]
 
 export const ProfileHeader = () => {
@@ -33,10 +32,10 @@ export const ProfileHeader = () => {
       <nav className="w-full px-6">
         <div className="flex items-center h-10">
           {/* Logo - Extrémité gauche */}
-          <div className="flex items-center space-x-1">
+          <Link href="/intros" className="flex items-center space-x-1 hover:opacity-80 transition-opacity">
             <Logo className="w-4 h-4" />
             <span className="text-sm font-bold font-[family-name:var(--font-nunito)]">Waly</span>
-          </div>
+          </Link>
 
           {/* Tab Navigation - Aligné avec le contenu */}
           <div className="flex-1 flex justify-center">

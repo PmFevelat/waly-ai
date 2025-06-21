@@ -92,6 +92,18 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
               My Account
             </Link>
             <Link
+              href="/settings/workspace"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              onClick={() => setIsOpen(false)}>
+              Workspace
+            </Link>
+            <Link
+              href="/settings/invite"
+              className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
+              onClick={() => setIsOpen(false)}>
+              Members
+            </Link>
+            <Link
               href="/settings/billing"
               className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
               onClick={() => setIsOpen(false)}>

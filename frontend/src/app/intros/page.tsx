@@ -13,21 +13,33 @@ import Image from 'next/image'
 const mockIntros = [
   {
     id: 1,
-    title: 'Sales Lead in FinTech',
+    industry: 'FinTech',
     company: 'Qonto',
     description: 'Has strong relationship with the Head of Sales at ACME.',
     avatar: '/images/avatar1.png',
     type: 'suggested' as const,
-    credits: 5
+    credits: 5,
+    category: 'Internal Influence' as const
   },
   {
     id: 2,
-    title: 'Account Executive in SaaS',
+    industry: 'SaaS',
     company: 'Swile',
     description: 'Know the decision makers in the Product team at Swile.',
     avatar: '/images/avatar2.png',
+    type: 'received' as const,
+    credits: 3,
+    category: 'Internal Stakes' as const
+  },
+  {
+    id: 3,
+    industry: 'EdTech',
+    company: 'Notion',
+    description: 'Familiar with their product development process and key stakeholders.',
+    avatar: '/images/avatar1.png',
     type: 'requested' as const,
-    credits: 3
+    credits: 4,
+    category: 'Internal Stakes' as const
   }
 ]
 
@@ -35,7 +47,8 @@ export default function IntrosPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'suggested' | 'requested'>('all');
+  const [filterType, setFilterType] = useState<'all' | 'suggested' | 'received' | 'requested' | 'accepted'>('suggested');
+  const [allIntros, setAllIntros] = useState(mockIntros);
   const [displayedIntros, setDisplayedIntros] = useState(mockIntros);
 
   useEffect(() => {
@@ -51,7 +64,7 @@ export default function IntrosPage() {
 
   // Recherche et filtrage en temps réel
   useEffect(() => {
-    let filtered = mockIntros;
+    let filtered = allIntros;
 
     // Filtrage par type
     if (filterType !== 'all') {
@@ -61,18 +74,27 @@ export default function IntrosPage() {
     // Filtrage par recherche
     if (searchQuery.trim() !== '') {
       filtered = filtered.filter(intro => 
-        intro.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        intro.industry.toLowerCase().includes(searchQuery.toLowerCase()) ||
         intro.company.toLowerCase().includes(searchQuery.toLowerCase()) ||
         intro.description.toLowerCase().includes(searchQuery.toLowerCase())
       );
     }
 
     setDisplayedIntros(filtered);
-  }, [searchQuery, filterType]);
+  }, [searchQuery, filterType, allIntros]);
 
   // Suppression d'une carte
   const handleRemoveIntro = (id: number) => {
-    setDisplayedIntros(prev => prev.filter(intro => intro.id !== id));
+    setAllIntros(prev => prev.filter(intro => intro.id !== id));
+  };
+
+  // Changement du statut d'une intro
+  const handleStatusChange = (id: number, newType: 'suggested' | 'received' | 'requested' | 'accepted') => {
+    setAllIntros(prev => 
+      prev.map(intro => 
+        intro.id === id ? { ...intro, type: newType } : intro
+      )
+    );
   };
 
   // Afficher un loading pendant la vérification
@@ -133,6 +155,16 @@ export default function IntrosPage() {
                       Suggested
                     </button>
                     <button
+                      onClick={() => setFilterType('received')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                        filterType === 'received' 
+                          ? 'bg-white text-gray-900 shadow-sm' 
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Received
+                    </button>
+                    <button
                       onClick={() => setFilterType('requested')}
                       className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
                         filterType === 'requested' 
@@ -141,6 +173,16 @@ export default function IntrosPage() {
                       }`}
                     >
                       Requested
+                    </button>
+                    <button
+                      onClick={() => setFilterType('accepted')}
+                      className={`px-3 py-1 text-xs font-medium rounded-md transition-colors ${
+                        filterType === 'accepted' 
+                          ? 'bg-white text-gray-900 shadow-sm' 
+                          : 'text-gray-600 hover:text-gray-900'
+                      }`}
+                    >
+                      Accepted
                     </button>
                     <button
                       onClick={() => setFilterType('all')}
@@ -164,6 +206,7 @@ export default function IntrosPage() {
                       key={intro.id} 
                       intro={intro} 
                       onRemove={() => handleRemoveIntro(intro.id)}
+                      onStatusChange={handleStatusChange}
                     />
                   ))
                 ) : (

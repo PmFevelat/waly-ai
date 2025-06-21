@@ -1,4 +1,5 @@
 import { Logo } from '@/components/logo'
+import Link from 'next/link'
 
 export const IntrosFooter = () => {
     return (
@@ -9,10 +10,10 @@ export const IntrosFooter = () => {
                     <div className="col-span-12 lg:col-span-8 lg:col-start-3">
                         <div className="flex flex-wrap justify-center items-center gap-4">
                             <div className="flex items-center gap-2">
-                                <div className="flex items-center gap-1">
+                                <Link href="/intros" className="flex items-center gap-1 hover:opacity-80 transition-opacity">
                                     <Logo className="h-4 w-auto" />
                                     <span className="text-sm font-bold font-[family-name:var(--font-nunito)]">Waly</span>
-                                </div>
+                                </Link>
                                 <span className="text-gray-500 text-xs">
                                     © {new Date().getFullYear()} Waly, All rights reserved
                                 </span>
