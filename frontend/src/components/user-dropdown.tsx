@@ -34,9 +34,14 @@ export const UserDropdown = ({ className }: UserDropdownProps) => {
   const handleLogout = async () => {
     try {
       await logout()
-      router.push('/')
+      // Forcer la redirection vers la page d'accueil et empêcher le retour en arrière
+      router.replace('/')
+      // Alternative au cas où router.replace ne fonctionnerait pas
+      window.location.href = '/'
     } catch (error) {
       console.error('Error logging out:', error)
+      // En cas d'erreur, rediriger quand même vers l'accueil
+      window.location.href = '/'
     }
   }
 
