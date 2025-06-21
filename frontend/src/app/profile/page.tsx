@@ -50,7 +50,7 @@ export default function ProfilePage() {
                     No interview done yet
                   </h3>
                   <p className="text-sm text-gray-500 mb-6">
-                    Ready to get matched with your target accounts? Let's start the conversation.
+                    Ready to get matched with your target accounts? Let&apos;s start the conversation.
                   </p>
                   <Button
                     onClick={handleOpenModal}

@@ -10,16 +10,30 @@ import { Search } from 'lucide-react'
 import { Input } from '@/components/ui/input'
 import Image from 'next/image'
 
-const mockIntros = [
+type IntroType = 'suggested' | 'received' | 'requested' | 'accepted';
+type CategoryType = 'Internal Influence' | 'Internal Stakes';
+
+interface Intro {
+  id: number;
+  industry: string;
+  company: string;
+  description: string;
+  avatar: string;
+  type: IntroType;
+  credits: number;
+  category: CategoryType;
+}
+
+const mockIntros: Intro[] = [
   {
     id: 1,
     industry: 'FinTech',
     company: 'Qonto',
     description: 'Has strong relationship with the Head of Sales at ACME.',
     avatar: '/images/avatar1.png',
-    type: 'suggested' as const,
+    type: 'suggested',
     credits: 5,
-    category: 'Internal Influence' as const
+    category: 'Internal Influence'
   },
   {
     id: 2,
@@ -27,9 +41,9 @@ const mockIntros = [
     company: 'Swile',
     description: 'Know the decision makers in the Product team at Swile.',
     avatar: '/images/avatar2.png',
-    type: 'received' as const,
+    type: 'received',
     credits: 3,
-    category: 'Internal Stakes' as const
+    category: 'Internal Stakes'
   },
   {
     id: 3,
@@ -37,9 +51,9 @@ const mockIntros = [
     company: 'Notion',
     description: 'Familiar with their product development process and key stakeholders.',
     avatar: '/images/avatar1.png',
-    type: 'requested' as const,
+    type: 'requested',
     credits: 4,
-    category: 'Internal Stakes' as const
+    category: 'Internal Stakes'
   }
 ]
 
@@ -47,9 +61,9 @@ export default function IntrosPage() {
   const { user, loading } = useAuth();
   const router = useRouter();
   const [searchQuery, setSearchQuery] = useState('');
-  const [filterType, setFilterType] = useState<'all' | 'suggested' | 'received' | 'requested' | 'accepted'>('suggested');
-  const [allIntros, setAllIntros] = useState(mockIntros);
-  const [displayedIntros, setDisplayedIntros] = useState(mockIntros);
+  const [filterType, setFilterType] = useState<'all' | IntroType>('suggested');
+  const [allIntros, setAllIntros] = useState<Intro[]>(mockIntros);
+  const [displayedIntros, setDisplayedIntros] = useState<Intro[]>(mockIntros);
 
   useEffect(() => {
     if (!loading) {
@@ -89,7 +103,7 @@ export default function IntrosPage() {
   };
 
   // Changement du statut d'une intro
-  const handleStatusChange = (id: number, newType: 'suggested' | 'received' | 'requested' | 'accepted') => {
+  const handleStatusChange = (id: number, newType: IntroType) => {
     setAllIntros(prev => 
       prev.map(intro => 
         intro.id === id ? { ...intro, type: newType } : intro

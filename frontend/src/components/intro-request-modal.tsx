@@ -62,7 +62,7 @@ export const IntroRequestModal = ({
               <strong>{credits} credits</strong> will be spent only if your request is accepted.
             </p>
             <p>
-              You'll be notified once they respond.
+              You&apos;ll be notified once they respond.
             </p>
           </div>
         </div>

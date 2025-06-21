@@ -76,7 +76,7 @@ export const IntroEmailModal = ({
               <p>Hi {fromUser} and {toUser},</p>
               
               <p>
-                I'm excited to introduce you both as I believe there's great potential for a valuable exchange 
+                I&apos;m excited to introduce you both as I believe there&apos;s great potential for a valuable exchange 
                 between your organizations.
               </p>
 
